@@ -16,7 +16,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 import "../index.css";
 
-const Input = () => {
+const TodoElement = () => {
   const [inputText, setInputText] = useState("");
   const [tasks, setTasks] = useState([]);
   const [status, setStatus] = useState("all");
@@ -44,7 +44,8 @@ const Input = () => {
     savetoLocalStorage();
   }, [tasks, status]);
 
-  const submitValue = () => {
+  const addValueToTheList = (e) => {
+    e.preventDefault();
     if (inputText.length > 0) {
       setTasks([...tasks, { text: inputText, completed: false, id: uuidv4() }]);
       setInputText("");
@@ -69,30 +70,33 @@ const Input = () => {
 
   const savetoLocalStorage = () => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
+    localStorage.setItem('button', status);
   };
 
   const getLocalTasks = () => {
-    if (localStorage.getItem("tasks") === null) {
+    if (localStorage.getItem("tasks") === null && localStorage.getItem('button' === null)) {
       localStorage.setItem("tasks", JSON.stringify([]));
+      localStorage.setItem('button','');
     } else {
       let itemList = JSON.parse(localStorage.getItem("tasks"));
       setTasks(itemList);
+      setStatus(localStorage.getItem('button'));
     }
   };
 
   return (
     <div>
-      <Box>
+      <form onSubmit={addValueToTheList}>
         <TextField
           autoFocus
           fullWidth
           placeholder='Put your task here'
           onChange={(e) => setInputText(e.target.value)}
           value={inputText}
-          onClick={submitValue}
+          onClick={addValueToTheList}
           color='secondary'
         />
-      </Box>
+      </form>
       <Box>
         <List>
           {filteredTasks.map((i) => (
@@ -111,15 +115,6 @@ const Input = () => {
           ))}
         </List>
       </Box>
-      <>
-        <TextField
-          type='number'
-          value={filteredTasks.length}
-          inputProps={{ readOnly: true }}
-          color='secondary'
-          size='small'
-        />
-      </>
       <Box
       component="form"
         sx={{
@@ -131,6 +126,13 @@ const Input = () => {
           },
         }}
       >
+        <TextField
+          type='number'
+          value={filteredTasks.length}
+          inputProps={{ readOnly: true }}
+          color='secondary'
+          size='small'
+        />
         <ButtonGroup color='secondary'>
           <SimpleButton text='All' onClick={statusHandler} />
           <SimpleButton text='Active' onClick={statusHandler} />
@@ -141,4 +143,4 @@ const Input = () => {
   );
 };
 
-export default Input;
+export default TodoElement;
