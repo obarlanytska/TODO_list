@@ -1,11 +1,11 @@
-import  Input  from "./components/Input";
+import  TodoElement  from "./components/TodoElement";
 import React from "react";
 
 
 function App() {
   return (
     <div className='container'>
-      <Input />
+      <TodoElement />
     </div>
   );
 }
